@@ -1,0 +1,62 @@
+[
+    [
+        {
+            "user_id" : 23,
+            "rating" : [
+                {
+                    "item" : 0,
+                    "rate" : 5
+                },{
+                    "item" : 1,
+                    "rate" : 2.6
+                },{
+                    "item" : 2,
+                    "rate" : 3
+                }
+            ]
+        },
+        {
+            "user_id" : 24,
+            "rating" : [
+                {
+                    "item" : 0,
+                    "rate" : 3
+                },{
+                    "item" : 1,
+                    "rate" : 3.6
+                },{
+                    "item" : 20,
+                    "rate" : 2
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "item_id" : 0,
+            "rated" : [
+                {
+                    "user_id" : 23,
+                    "rate" : 5
+                },{
+                    "user_id" : 24,
+                    "rate" : 3
+                }
+            ]
+
+        },
+        {
+            "item_id" : 1,
+            "rated" : [
+                {
+                    "user_id" : 23,
+                    "rate" : 2.6
+                },{
+                    "user_id" : 24,
+                    "rate" : 3.6
+                }
+            ]
+
+        }
+    ]
+]
