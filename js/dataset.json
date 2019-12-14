@@ -8,10 +8,10 @@
                     "rate" : 5
                 },{
                     "item" : 1,
-                    "rate" : 2.6
+                    "rate" : 1
                 },{
                     "item" : 2,
-                    "rate" : 3
+                    "rate" : 2
                 }
             ]
         },
@@ -20,13 +20,13 @@
             "rating" : [
                 {
                     "item" : 0,
-                    "rate" : 3
+                    "rate" : 4
                 },{
                     "item" : 1,
-                    "rate" : 3.6
+                    "rate" : 4.6
                 },{
-                    "item" : 20,
-                    "rate" : 2
+                    "item" : 2,
+                    "rate" : 4.9
                 }
             ]
         }
@@ -40,7 +40,7 @@
                     "rate" : 5
                 },{
                     "user_id" : 24,
-                    "rate" : 3
+                    "rate" : 4
                 }
             ]
 
@@ -50,10 +50,23 @@
             "rated" : [
                 {
                     "user_id" : 23,
-                    "rate" : 2.6
+                    "rate" : 1
                 },{
                     "user_id" : 24,
-                    "rate" : 3.6
+                    "rate" : 4.6
+                }
+            ]
+
+        },
+        {
+            "item_id" : 2,
+            "rated" : [
+                {
+                    "user_id" : 23,
+                    "rate" : 2
+                },{
+                    "user_id" : 24,
+                    "rate" : 4.9
                 }
             ]
 

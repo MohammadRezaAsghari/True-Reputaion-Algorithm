@@ -13,6 +13,7 @@ let init = function () {
         item['sd'] = sd;
     });
     calculateRateObjectivity();
+    registerRateObjectivity();
 
 }
 
@@ -85,4 +86,21 @@ let calculateRateObjectivity = function() {
             subItem['or'] = or;
         });
     });
+}
+let extractRateObjectivity = function(userId) {
+    const userOR = [];
+    dataset[1].forEach(function (item) {
+        let userFind = item.rated.find(function (subItem) {
+            return subItem.user_id === userId;
+        });
+        userOR.push(userFind.or);
+    });
+    return userOR;
+};
+
+let registerRateObjectivity = function (){
+    dataset[0].forEach(function (item) {
+        const val = extractRateObjectivity(item.user_id);
+        item['orArray'] = val;
+    })
 }

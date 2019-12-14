@@ -24,5 +24,7 @@ setTimeout(function() {
     // console.log(getMean(giveRates(1)));
     // console.log(getSD(giveRates(1)));
     // console.log(giveUsers(0));
+    console.table(dataset[1]);
+    
 
 } ,1000);
