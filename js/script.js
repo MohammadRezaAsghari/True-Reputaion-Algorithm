@@ -15,16 +15,15 @@ if(!(localStorage.getItem('dataset'))){
 
 
 setTimeout(function() {
-    console.log(dataset);
-
     init();
 
+    console.log(dataset);
     // giveUsersRates(24);
     // console.log(giveRates(1));
     // console.log(getMean(giveRates(1)));
     // console.log(getSD(giveRates(1)));
     // console.log(giveUsers(0));
-    console.table(dataset[1]);
+    
     
 
 } ,1000);

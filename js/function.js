@@ -14,28 +14,12 @@ let init = function () {
     });
     calculateRateObjectivity();
     registerRateObjectivity();
+    calculateUserObjectivity();
 
 }
 
-// Arithmetic mean
-let getMean = function (data) {
-    return data.reduce(function (a, b) {
-        return Number(a) + Number(b);
-    }) / data.length;
-};
 
-// Standard deviation
-let getSD = function (data) {
-    let m = getMean(data);
-    return Math.sqrt(data.reduce(function (sq, n) {
-            return sq + Math.pow(n - m, 2);
-        }, 0) / (data.length - 1));
-};
-
-//giveUsers
-//input: an specific item (m)
-//process :
-//return  all users give rate to item m
+//giveUsers: give it and item id --> returns an array of users who rated that item
 let giveUsers = function(m){
     const usersRatesOnProduct = [];
     let properItem = dataset[1].find(function(item) {
@@ -47,10 +31,7 @@ let giveUsers = function(m){
     return usersRatesOnProduct;
 }
 
-//giveRates 
-//input: an specific item (m) --> id of item : number
-//process
-//output: returns all rates to item (m) in array
+//giveRates: give it and item id --> returns an array of rates which belongs to that item
 let giveRates = function(productId){  
     let ratesOnProduct = [];  
     let properItem = dataset[1].find(function(product) {
@@ -62,23 +43,16 @@ let giveRates = function(productId){
     return ratesOnProduct;
 }
 
-//giveUsersRates()
-//input: an specific user (u) --> u = id of user like : e9343-3434
-//process:
-//output: return all rates submited by user u
+//giveUsersRates(): give it a user id --> returns that activity number of that user
 const giveUsersRates = function (u) {
     let properUser = dataset[0].find(function(item) {
         return item.user_id === u;
     });
-    console.log(properUser);
     console.log(properUser.rating.length);
 }
 
-//calculateRateObjectivity
-//input (rep + sd + rate)
-//process : Math.abs((rate - rep)/sd)
-//output : objectivity of rate
-
+//calculateRateObjectivity : call it and then --> the dataset[1].rated has a new property
+// called [or] --> or = |(item_rate - reputation of the item)/standard_deviation|
 let calculateRateObjectivity = function() {
     dataset[1].forEach(function (item) {
         item.rated.forEach(function (subItem) {
@@ -87,6 +61,9 @@ let calculateRateObjectivity = function() {
         });
     });
 }
+
+// dataset[1].rated has a property named [or]
+// extracting all these [or] values in items and ... (continue in next function)
 let extractRateObjectivity = function(userId) {
     const userOR = [];
     dataset[1].forEach(function (item) {
@@ -98,9 +75,17 @@ let extractRateObjectivity = function(userId) {
     return userOR;
 };
 
+//add it to dataset[0] for each user
 let registerRateObjectivity = function (){
     dataset[0].forEach(function (item) {
         const val = extractRateObjectivity(item.user_id);
         item['orArray'] = val;
     })
+}
+
+//calculateUserObjectivity
+let calculateUserObjectivity = function () {
+    dataset[0].forEach(function (item) {
+        item['oStar'] = (arraySum(item.orArray) / item.orArray.length);
+    });
 }
