@@ -2,7 +2,6 @@
 
 //init
 let init = function () {
-    
     dataset[1].forEach(function(item){
         let ratesArray = giveRates(item.item_id);
         //initialize basic reputation
@@ -17,7 +16,6 @@ let init = function () {
     calculateUserObjectivity();
 
 }
-
 
 //giveUsers: give it and item id --> returns an array of users who rated that item
 let giveUsers = function(m){
