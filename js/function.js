@@ -68,7 +68,8 @@ let extractRateObjectivity = function(userId) {
         let userFind = item.rated.find(function (subItem) {
             return subItem.user_id === userId;
         });
-        userOR.push(userFind.or);
+        // later : cheack here whether userFind is !== -1
+        userOR.push({userOR : userFind.or , item : item.item_id});
     });
     return userOR;
 };
