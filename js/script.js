@@ -18,4 +18,5 @@ if(!(localStorage.getItem('dataset'))){
 setTimeout(function() {
     init();
     console.log(dataset);
+    
 } ,1000);

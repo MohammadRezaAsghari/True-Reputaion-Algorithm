@@ -35,7 +35,7 @@
             "rating" : [
                 {
                     "item" : 0,
-                    "rate" : 0.5
+                    "rate" : 0.01
                 },{
                     "item" : 1,
                     "rate" : 1.2
@@ -58,7 +58,7 @@
                     "rate" : 4
                 },{
                     "user_id" : 25,
-                    "rate" : 0.5
+                    "rate" : 0.01
                 }
             ]
 

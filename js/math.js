@@ -31,7 +31,6 @@ function calculateMedian(values){
     values.sort(function(a,b){
       return a-b;
     });
-    console.log(values);
     let half = Math.floor(values.length / 2);
   
     if (values.length % 2)
@@ -75,5 +74,12 @@ let setBoxPlot = function(arr) {
 }
 
 //Tesing
-let value = setBoxPlot([1.4 , 1.1 , 1.5 , 2 , 5 , 0.8 , 0.8, 0.3 , 0.9 , 1.3 , 1.3 , 2]);
+// let value = setBoxPlot([1.4 , 1.1 , 1.5 , 2 , 5 , 0.8 , 0.8, 0.3 , 0.9 , 1.3 , 1.3 , 2]);
 
+let orArrayRate = function(arr){
+    const array = [];
+    arr.forEach((item) =>{
+        array.push(item.userOR);
+    });
+    return array;
+}

@@ -14,6 +14,7 @@ let init = function () {
     calculateRateObjectivity();
     registerRateObjectivity();
     calculateUserObjectivity();
+    calculateUserConsistency();
 
 }
 
@@ -88,3 +89,49 @@ let calculateUserObjectivity = function () {
         item['oStar'] = (arraySum(item.orArray) / item.orArray.length);
     });
 }
+
+//calculate consistency , bpr stands for box-plot result
+let calculateUserConsistency = ()=>{
+    dataset[0].forEach((item) => {
+        const rate = orArrayRate(item.orArray);
+        let bpr = setBoxPlot(rate);
+        let crArray = [];
+        item.orArray.forEach((orItem) =>{
+            let cr;
+            //outliers
+            if((orItem.userOR > (bpr.q3 + (1.5*bpr.IQR))) || (orItem.userOR < (bpr.q1 - (1.5 * bpr.IQR)))){
+                cr = 0;
+            }
+            //confidence of .5
+            if(((orItem.userOR <= (bpr.q3 + (1.5*bpr.IQR))) && (orItem.userOR > (bpr.q3 + (1 * bpr.IQR)))) ||
+               ((orItem.userOR >= (bpr.q1 - (1.5*bpr.IQR))) && (orItem.userOR < (bpr.q1 - (1 * bpr.IQR)))))
+            {
+                cr = 0.5;
+            }
+            //confidence of .7
+            if(((orItem.userOR <= (bpr.q3 + (1 * bpr.IQR))) && (orItem.userOR > (bpr.q3 + (0.5 * bpr.IQR)))) ||
+               ((orItem.userOR >= (bpr.q1 - (1 * bpr.IQR))) && (orItem.userOR < (bpr.q1 - (0.5 * bpr.IQR)))))
+            {
+                cr = 0.7;
+                
+            }
+            //confidence of .9
+            if(((orItem.userOR <= (bpr.q3 + (0.5 * bpr.IQR))) && (orItem.userOR > bpr.q3)) ||
+               ((orItem.userOR >= (bpr.q1 - (0.5 * bpr.IQR))) && (orItem.userOR < bpr.q1)))
+            {
+                cr = 0.9;
+            }
+            else{
+                cr = 1;
+            }
+            crArray.push(
+                {
+                    item:orItem.item,
+                    cr : cr
+                }
+             );
+        });
+        item['crArray'] = crArray;
+    })
+}
+
