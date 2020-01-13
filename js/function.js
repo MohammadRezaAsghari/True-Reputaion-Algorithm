@@ -1,8 +1,6 @@
-//functions 
-
 //init
-let init = function () {
-    dataset[1].forEach(function(item){
+let init = () => {
+    dataset[1].forEach((item) =>{
         let ratesArray = giveRates(item.item_id);
         //initialize basic reputation
         let rep = getMean(ratesArray);
@@ -15,36 +13,37 @@ let init = function () {
     registerRateObjectivity();
     calculateUserObjectivity();
     calculateUserConsistency();
-
+    calculateTrust();
+    registerConsistency();
 }
 
 //giveUsers: give it and item id --> returns an array of users who rated that item
-let giveUsers = function(m){
+let giveUsers = m =>{
     const usersRatesOnProduct = [];
-    let properItem = dataset[1].find(function(item) {
+    let properItem = dataset[1].find(item => {
         return item.item_id === m;
     });
-    properItem.rated.forEach(function (item) {
+    properItem.rated.forEach(item => {
         usersRatesOnProduct.push(item.user_id);
     });
     return usersRatesOnProduct;
 }
 
 //giveRates: give it and item id --> returns an array of rates which belongs to that item
-let giveRates = function(productId){  
+let giveRates = productId =>{  
     let ratesOnProduct = [];  
-    let properItem = dataset[1].find(function(product) {
+    let properItem = dataset[1].find( product =>{
         return product.item_id === productId;
     });
-    properItem.rated.forEach(function (item) {
+    properItem.rated.forEach(item => {
         ratesOnProduct.push(item.rate);
     });
     return ratesOnProduct;
 }
 
 //giveUsersRates(): give it a user id --> returns that activity number of that user
-const giveUsersRates = function (u) {
-    let properUser = dataset[0].find(function(item) {
+const giveUsersRates = u => {
+    let properUser = dataset[0].find(item =>{
         return item.user_id === u;
     });
     console.log(properUser.rating.length);
@@ -52,9 +51,9 @@ const giveUsersRates = function (u) {
 
 //calculateRateObjectivity : call it and then --> the dataset[1].rated has a new property
 // called [or] --> or = |(item_rate - reputation of the item)/standard_deviation|
-let calculateRateObjectivity = function() {
-    dataset[1].forEach(function (item) {
-        item.rated.forEach(function (subItem) {
+let calculateRateObjectivity = () => {
+    dataset[1].forEach(item => {
+        item.rated.forEach(subItem =>{
             let or = Math.abs((subItem.rate - item.rep) / item.sd);
             subItem['or'] = or;
         });
@@ -63,10 +62,10 @@ let calculateRateObjectivity = function() {
 
 // dataset[1].rated has a property named [or]
 // extracting all these [or] values in items and ... (continue in next function)
-let extractRateObjectivity = function(userId) {
+const extractRateObjectivity = userId => {
     const userOR = [];
-    dataset[1].forEach(function (item) {
-        let userFind = item.rated.find(function (subItem) {
+    dataset[1].forEach(item =>{
+        let userFind = item.rated.find(subItem =>{
             return subItem.user_id === userId;
         });
         // later : cheack here whether userFind is !== -1
@@ -76,22 +75,22 @@ let extractRateObjectivity = function(userId) {
 };
 
 //add it to dataset[0] for each user
-let registerRateObjectivity = function (){
-    dataset[0].forEach(function (item) {
+const registerRateObjectivity =  () => {
+    dataset[0].forEach(item => {
         const val = extractRateObjectivity(item.user_id);
         item['orArray'] = val;
     })
 }
 
 //calculateUserObjectivity
-let calculateUserObjectivity = function () {
-    dataset[0].forEach(function (item) {
+const calculateUserObjectivity = () =>{
+    dataset[0].forEach(item =>{
         item['oStar'] = (arraySum(item.orArray) / item.orArray.length);
     });
 }
 
 //calculate consistency , bpr stands for box-plot result
-let calculateUserConsistency = ()=>{
+const calculateUserConsistency = ()=>{
     dataset[0].forEach((item) => {
         const rate = orArrayRate(item.orArray);
         let bpr = setBoxPlot(rate);
@@ -132,6 +131,50 @@ let calculateUserConsistency = ()=>{
              );
         });
         item['crArray'] = crArray;
+    })
+}
+
+//calculate Trust = O(n^2)
+
+const calculateTrust = () =>{
+    dataset[0].forEach((user)=>{
+        const trArray = [];
+        const actv = user.rating.length;
+        const obj = user.oStar;
+        user.rating.forEach((rte , indx)=>{
+            //be careful about user.crArray[indx] in order (decided not to go through base on id)
+            let tr = obj * actv * user.crArray[indx].cr;
+            rte['tr'] = tr;
+            trArray.push({item : rte.item,tr : tr , user:user.user_id });
+        })
+        user['trArray'] = trArray;
+    })
+}
+
+//Register Trust Value in dataset[1]
+
+// injecting proper tr into item profile (item.rated now has a new value called tr)
+const injectTRUST = (trArray) =>{
+    trArray.forEach(trObject => {
+        
+        findedProduct = dataset[1].find( product =>{
+            return trObject.item === product.item_id;
+        });
+        
+        
+        findedUser = findedProduct.rated.find( rtd =>{
+            return rtd.user_id === trObject.user
+        });
+        
+        findedUser.tr = trObject.tr;
+        
+    })
+}
+
+//  O(n^3)
+const registerConsistency = () =>{
+    dataset[0].forEach(user =>{
+        injectTRUST(user.trArray);
     })
 }
 

@@ -15,7 +15,7 @@ if(!(localStorage.getItem('dataset'))){
 
 
 
-setTimeout(function() {
+setTimeout(() =>{
     init();
     console.log(dataset);
     

@@ -1,14 +1,14 @@
 // Arithmetic mean
-let getMean = function (data) {
-    return data.reduce(function (a, b) {
+let getMean =  data => {
+    return data.reduce( (a, b) => {
         return Number(a) + Number(b);
     }) / data.length;
 };
 
 // Standard deviation
-let getSD = function (data) {
+let getSD = data =>{
     let m = getMean(data);
-    return Math.sqrt(data.reduce(function (sq, n) {
+    return Math.sqrt(data.reduce((sq, n) => {
             return sq + Math.pow(n - m, 2);
         }, 0) / (data.length - 1));
 };
@@ -16,9 +16,9 @@ let getSD = function (data) {
 
 // sum of and specific array
 
-let arraySum = function (arrayOfNumbers) {
+let arraySum = arrayOfNumbers =>{
     let sum = 0;
-    arrayOfNumbers.forEach(function (item) {
+    arrayOfNumbers.forEach(item => {
         sum = sum + item.userOR;
     });
     return sum;
@@ -28,7 +28,7 @@ let arraySum = function (arrayOfNumbers) {
 function calculateMedian(values){
     if(values.length ===0) return 0;
   
-    values.sort(function(a,b){
+    values.sort((a,b)=> {
       return a-b;
     });
     let half = Math.floor(values.length / 2);
@@ -39,7 +39,7 @@ function calculateMedian(values){
     return (values[half - 1] + values[half]) / 2.0;
 }
 
-let setBoxPlot = function(arr) {
+let setBoxPlot = arr => {
     let firstHalf , secondHalf , q1 , q3 , IQR;
     //calculate median
     const median = calculateMedian(arr);
@@ -76,9 +76,9 @@ let setBoxPlot = function(arr) {
 //Tesing
 // let value = setBoxPlot([1.4 , 1.1 , 1.5 , 2 , 5 , 0.8 , 0.8, 0.3 , 0.9 , 1.3 , 1.3 , 2]);
 
-let orArrayRate = function(arr){
+let orArrayRate = arr =>{
     const array = [];
-    arr.forEach((item) =>{
+    arr.forEach(item =>{
         array.push(item.userOR);
     });
     return array;
