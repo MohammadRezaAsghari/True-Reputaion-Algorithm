@@ -1,20 +1,13 @@
 //init
 let init = () => {
-    dataset[1].forEach((item) =>{
-        let ratesArray = giveRates(item.item_id , true);
-        //initialize basic reputation
-        let rep = getMean(ratesArray);
-        item['rep'] = rep;
-        //initialize standard deviation
-        let sd = getSD(ratesArray);
-        item['sd'] = sd;
-    });
+    setUP(true);
     calculateRateObjectivity(true);
     registerRateObjectivity();
     calculateUserObjectivity();
     calculateUserConsistency();
-    calculateTrust();
-    registerTRUST();
+    calculateTR();
+    registerTR();
+    calculateNewReputation();
 }
 
 //giveUsers: give it and item id --> returns an array of users who rated that item
@@ -37,7 +30,7 @@ let giveRates = (productId , initlz) =>{
         });
     }else{
         properItem.rated.forEach(item => {
-            ratesOnProduct.push(item.tr);
+            ratesOnProduct.push(item.calcRep);
         });
     }
     
@@ -49,6 +42,19 @@ const giveUsersRates = u => {
     let properUser = dataset[0].find(item => item.user_id === u);
 }
 
+//calculate reputation and standard deviation
+const setUP = (state) =>{
+    dataset[1].forEach((item) =>{
+        let ratesArray = giveRates(item.item_id , state);
+        //initialize basic reputation
+        let rep = getMean(ratesArray);
+        item['rep'] = rep;
+        //initialize standard deviation
+        let sd = getSD(ratesArray);
+        item['sd'] = sd;
+    });
+}
+
 //calculateRateObjectivity : call it and then --> the dataset[1].rated has a new property
 // called [or] --> or = |(item_rate - reputation of the item)/standard_deviation|
 let calculateRateObjectivity = (initlz) => {
@@ -58,7 +64,7 @@ let calculateRateObjectivity = (initlz) => {
             if(initlz){
                  or = Math.abs((subItem.rate - item.rep) / item.sd);
             }else{
-                 or = Math.abs((subItem.tr - item.rep) / item.sd);
+                 or = Math.abs((subItem.calcRep - item.rep) / item.sd);
             }
             subItem['or'] = or;
         });
@@ -141,8 +147,7 @@ const calculateUserConsistency = ()=>{
 }
 
 //calculate Trust = O(n^2)
-
-const calculateTrust = () =>{
+const calculateTR = () =>{
     dataset[0].forEach((user)=>{
         const trArray = [];
         const actv = user.rating.length;
@@ -158,30 +163,38 @@ const calculateTrust = () =>{
 }
 
 //Register Trust Value in dataset[1]
-
 // injecting proper tr into item profile (item.rated now has a new value called tr)
-const injectTRUST = (trArray) =>{
+const injectTR = (trArray) =>{
     //let's decide about trArray one by one
     trArray.forEach(trObject => {
         //find the right item
-        findedProduct = dataset[1].find( product =>{
-            return trObject.item === product.item_id;
-        });
+        findedProduct = dataset[1].find(product => trObject.item === product.item_id);
         //find the right user on that item
-        findedUser = findedProduct.rated.find( rtd =>{
-            return rtd.user_id === trObject.user
-        });
+        findedUser = findedProduct.rated.find(rtd => rtd.user_id === trObject.user);
         //assign the calculated tr on that user
         findedUser.tr = trObject.tr;
     })
 }
 
 //  O(n^3)
-const registerTRUST = () =>{
+const registerTR = () =>{
     //for every user , send their trArray to 
     //put tr in the right place
     dataset[0].forEach(user => {
-        injectTRUST(user.trArray);
+        injectTR(user.trArray);
+    })
+}
+
+//calculateNewReputation
+const calculateNewReputation = () =>{
+    dataset[1].forEach(product => {
+        let sumOfTR = 0;
+        product.rated.forEach(prObj =>{
+            sumOfTR += prObj.tr;
+        });
+        product.rated.forEach(prObj =>{
+            prObj.calcRep = (prObj.rate * prObj.tr) / sumOfTR ;
+        })
     })
 }
 

@@ -24,22 +24,15 @@ setTimeout(() =>{
 
 
 let TrueReputation = () => {
-    for(let i=0 ; i<2000 ; i++){
-        dataset[1].forEach((item) =>{
-            let ratesArray = giveRates(item.item_id , false);
-            //initialize basic reputation
-            let rep = getMean(ratesArray);
-            item['rep'] = rep;
-            //initialize standard deviation
-            let sd = getSD(ratesArray);
-            item['sd'] = sd;
-        });
+    for(let i=0 ; i<1000 ; i++){
+        setUP(false);
         calculateRateObjectivity(false);
         registerRateObjectivity();
         calculateUserObjectivity();
         calculateUserConsistency();
-        calculateTrust();
-        registerTRUST();
+        calculateTR();
+        registerTR();
+        calculateNewReputation();
     }
     console.log(dataset);
 }
