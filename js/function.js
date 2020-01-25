@@ -44,14 +44,18 @@ const giveUsersRates = u => {
 
 //calculate reputation and standard deviation
 const setUP = (state) =>{
+    debugger;
     dataset[1].forEach((item) =>{
         let ratesArray = giveRates(item.item_id , state);
         //initialize basic reputation
+        debugger;
         let rep = getMean(ratesArray);
         item['rep'] = rep;
+        debugger;
         //initialize standard deviation
         let sd = getSD(ratesArray);
         item['sd'] = sd;
+        debugger;
     });
 }
 

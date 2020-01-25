@@ -1,4 +1,7 @@
 
+       if(localStorage.getItem('DATA') === null){
+        console.log('inside if');
+       
         let url = "Movie.xlsx";
         
         /* set up async GET request */
@@ -19,12 +22,51 @@
             /* Get worksheet */
             let worksheet = workbook.Sheets[first_sheet_name];
             let dataset = XLSX.utils.sheet_to_json(worksheet);
-
-
-            console.log(dataset);
-            
+             
+            localStorage.setItem('DATA' , JSON.stringify(dataset));
         }
         req.send();
+    }
 
+    let MovieData = JSON.parse(localStorage.getItem('DATA'));
+    let DataSet = [[] , []];
+    MovieData.forEach(md =>{
+        //fill out DataSet[0]
+        findedUser = DataSet[0].find(user =>{
+            return user.user_id === Number(md[196]);
+        });
         
+        if(findedUser === undefined){
+            DataSet[0].push(
+                {
+                    user_id : Number(md[196]),
+                    rating : [{item : Number(md[242]) , rate : Number(md[3])}]
+                }
+            );
+        }else{
+            
+            findedUser.rating.push({
+                item : Number(md[242]),
+                rate : Number(md[3])
+            });
+        }
+        //fill out DataSet[1]
+        findedItem = DataSet[1].find(product =>{
+            return product.item_id === Number(md[242]);
+        });
+        if(findedItem === undefined){
+            DataSet[1].push({
+                item_id : Number(md[242]),
+                rated : [{user_id : Number(md[196]) , rate : Number(md[3])}]
+            });
+        }else{
+            findedItem.rated.push({
+                user_id : Number(md[196]),
+                rate : Number(md[3])
+            });
+        }
+    });
+
+//   console.log(DataSet);
+
        
