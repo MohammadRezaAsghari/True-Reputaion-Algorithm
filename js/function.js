@@ -19,17 +19,17 @@ let giveUsers = m =>{
 }
 
 //giveRates: give it and item id --> returns an array of rates which belongs to that item
-let giveRates = (productId , initlz) =>{  
+let giveRates = (product , initlz) =>{  
     let ratesOnProduct = [];  
-    let properItem = dataset[1].find( product =>{
-        return product.item_id === productId;
-    });
+    // let properItem = dataset[1].find( product =>{
+    //     return product.item_id === productId;
+    // });
     if(initlz){
-        properItem.rated.forEach(item => {
+        product.rated.forEach(item => {
             ratesOnProduct.push(item.rate);
         });
     }else{
-        properItem.rated.forEach(item => {
+        product.rated.forEach(item => {
             ratesOnProduct.push(item.calcRep);
         });
     }
@@ -44,32 +44,32 @@ const giveUsersRates = u => {
 
 //calculate reputation and standard deviation
 const setUP = (state) =>{
-    debugger;
     dataset[1].forEach((item) =>{
-        let ratesArray = giveRates(item.item_id , state);
-        //initialize basic reputation
-        debugger;
+        let ratesArray = giveRates(item, state);
+        //calc rep
         let rep = getMean(ratesArray);
         item['rep'] = rep;
-        debugger;
-        //initialize standard deviation
+        //cal sd
         let sd = getSD(ratesArray);
+        //put sd
         item['sd'] = sd;
-        debugger;
     });
 }
 
 //calculateRateObjectivity : call it and then --> the dataset[1].rated has a new property
-// called [or] --> or = |(item_rate - reputation of the item)/standard_deviation|
 let calculateRateObjectivity = (initlz) => {
     dataset[1].forEach(item => {
         item.rated.forEach(subItem =>{
+            
             let or;
             if(initlz){
-                 or = Math.abs((subItem.rate - item.rep) / item.sd);
+                or = Math.abs((subItem.rate - item.rep) / (item.sd + 1));
+                
             }else{
-                 or = Math.abs((subItem.calcRep - item.rep) / item.sd);
+                
+                or = Math.abs((subItem.rate - item.rep) / (item.sd + 1));
             }
+            
             subItem['or'] = or;
         });
     });

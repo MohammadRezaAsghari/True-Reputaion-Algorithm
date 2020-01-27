@@ -8,14 +8,18 @@ let getMean =  data => {
 // Standard deviation
 let getSD = data =>{
     let m = getMean(data);
-    return Math.sqrt(data.reduce((sq, n) => {
+    if(data.length === 1){
+        return 0;
+    }
+    else{
+        return Math.sqrt(data.reduce((sq, n) => {
             return sq + Math.pow(n - m, 2);
-        }, 0) / (data.length - 1));
+        }, 0) / (data.length - 1));   
+    }  
 };
 
 
 // sum of and specific array
-
 let arraySum = arrayOfNumbers =>{
     let sum = 0;
     arrayOfNumbers.forEach(item => {
@@ -27,7 +31,7 @@ let arraySum = arrayOfNumbers =>{
 //Finding Median
 function calculateMedian(values){
     if(values.length ===0) return 0;
-  
+
     values.sort((a,b)=> {
       return a-b;
     });

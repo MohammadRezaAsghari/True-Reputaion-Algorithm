@@ -17,22 +17,26 @@ let dataset = DataSet;
 
 setTimeout(() =>{
     init();
-    // TrueReputation();
+    TrueReputation();
     
 } ,1000);
 
 
-// let TrueReputation = () => {
-//     for(let i=0 ; i<1000 ; i++){
-//         setUP(false);
-//         calculateRateObjectivity(false);
-//         registerRateObjectivity();
-//         calculateUserObjectivity();
-//         calculateUserConsistency();
-//         calculateTR();
-//         registerTR();
-//         calculateNewReputation();
-//     }
-    
-// }
+let TrueReputation = () => {
+    for(let i=0 ; i<2; i++){
+        setUP(false);
+        calculateRateObjectivity(false);
+        registerRateObjectivity();
+        calculateUserObjectivity();
+        calculateUserConsistency();
+        calculateTR();
+        registerTR();
+        calculateNewReputation();
+    }
+}
 console.log(dataset);
+
+//reports
+console.log(lessThan50());
+
+
