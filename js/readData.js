@@ -1,4 +1,3 @@
-
        if(localStorage.getItem('DATA') === null){
         console.log('inside if');
        
@@ -66,7 +65,5 @@
             });
         }
     });
-
-//   console.log(DataSet);
 
        

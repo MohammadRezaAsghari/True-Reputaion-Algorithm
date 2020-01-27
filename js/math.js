@@ -77,9 +77,6 @@ let setBoxPlot = arr => {
     };
 }
 
-//Tesing
-// let value = setBoxPlot([1.4 , 1.1 , 1.5 , 2 , 5 , 0.8 , 0.8, 0.3 , 0.9 , 1.3 , 1.3 , 2]);
-
 let orArrayRate = arr =>{
     const array = [];
     arr.forEach(item =>{

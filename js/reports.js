@@ -2,7 +2,7 @@
 function lessThan50(){
     let sum=0;
     dataset[1].forEach(product =>{
-        if(product.rated.length >=90 && product.rated.length <=110){
+        if(product.rated.length >=300){
             sum+=1;
         }
     });

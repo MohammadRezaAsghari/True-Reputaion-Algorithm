@@ -21,9 +21,6 @@ let giveUsers = m =>{
 //giveRates: give it and item id --> returns an array of rates which belongs to that item
 let giveRates = (product , initlz) =>{  
     let ratesOnProduct = [];  
-    // let properItem = dataset[1].find( product =>{
-    //     return product.item_id === productId;
-    // });
     if(initlz){
         product.rated.forEach(item => {
             ratesOnProduct.push(item.rate);
@@ -60,7 +57,6 @@ const setUP = (state) =>{
 let calculateRateObjectivity = (initlz) => {
     dataset[1].forEach(item => {
         item.rated.forEach(subItem =>{
-            
             let or;
             if(initlz){
                 or = Math.abs((subItem.rate - item.rep) / (item.sd + 1));
@@ -79,7 +75,6 @@ let calculateRateObjectivity = (initlz) => {
 // extracting all these [or] values in items and ... (continue in next function)
 const extractRateObjectivity = userId => {
     const userOR = [];
-    
     dataset[1].forEach(item =>{
         let userFind = item.rated.find(subItem => subItem.user_id === userId);
         if(userFind){
@@ -166,7 +161,6 @@ const calculateTR = () =>{
     })
 }
 
-//Register Trust Value in dataset[1]
 // injecting proper tr into item profile (item.rated now has a new value called tr)
 const injectTR = (trArray) =>{
     //let's decide about trArray one by one
