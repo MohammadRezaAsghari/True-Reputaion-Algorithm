@@ -23,5 +23,6 @@ console.log(dataset);
 
 //reports
 console.log(lessThan50());
+console.log(dangerUser());
 
 
