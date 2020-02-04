@@ -151,12 +151,21 @@ const calculateTR = () =>{
         const trArray = [];
         const actv = user.rating.length;
         const obj = user.oStar;
-        user.rating.forEach((rte , indx)=>{
-            //be careful about user.crArray[indx] in order (decided not to go through base on id)
-            let tr = obj * actv * user.crArray[indx].cr;
-            rte['tr'] = tr;
-            trArray.push({item : rte.item,tr : tr , user:user.user_id });
-        })
+        let tr;
+        if(user.rating.length !== undefined){
+            user.rating.forEach((rte , indx)=>{
+                //be careful about user.crArray[indx] in order (decided not to go through base on id)
+                tr = obj * actv * user.crArray[indx].cr;
+                rte['tr'] = tr;
+                trArray.push({item : rte.item,tr : tr , user:user.user_id });
+            });
+        }
+        else{
+            tr = obj * 1 * user.crArray[0].cr;
+            user.rating['tr'] = tr;
+            trArray.push({item : user.rating.item , tr : tr , user:user.user_id});
+        }
+       
         user['trArray'] = trArray;
     })
 }
