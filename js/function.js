@@ -196,12 +196,16 @@ const registerTR = () =>{
 const calculateNewReputation = () =>{
     dataset[1].forEach(product => {
         let sumOfTR = 0;
+        // sum of all r * tr
+        let sumOfRTR = 0;
         product.rated.forEach(prObj =>{
             sumOfTR += prObj.tr;
+            sumOfRTR += prObj.tr * prObj.rate;
         });
-        product.rated.forEach(prObj =>{
-            prObj.calcRep = (prObj.rate * prObj.tr) / sumOfTR ;
-        })
+        // product.rated.forEach(prObj =>{
+        //     prObj.calcRep = (prObj.rate * prObj.tr) / sumOfTR ;
+        // });
+        product.rep = sumOfRTR / sumOfTR;
     })
 }
 

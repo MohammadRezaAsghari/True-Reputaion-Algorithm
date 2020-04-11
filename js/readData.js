@@ -28,6 +28,7 @@
     }
 
     let MovieData = JSON.parse(localStorage.getItem('DATA'));
+    console.log(MovieData);
     let DataSet = [[] , []];
     MovieData.forEach(md =>{
         //fill out DataSet[0]

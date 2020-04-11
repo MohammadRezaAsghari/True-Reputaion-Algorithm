@@ -9,10 +9,9 @@ function lessThan50(){
 }
 
 function dangerUser(){
-    
     let dangerProduct = dataset[1].filter(product =>{
-        // if(product.rated.length >=90 && product.rated.length <=140){
-        if(product.rated.length >=200){
+        if((product.rated.length >=30 && product.rated.length <=40) || product.rated.length === 130){
+            // if(product.rated.length === 357){
             return true;
         }
     });

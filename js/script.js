@@ -1,10 +1,10 @@
 let dataset = DataSet;
+let test;
 
-// console.log(dataset);
-// Attack
-pushAttack(dataset , 1014);
 
 setTimeout(() =>{
+    pushAttack(dataset[1] , 265);
+    // pushAttack(dataset[1] , 173);
     init();
     TrueReputation();
     
@@ -13,7 +13,7 @@ setTimeout(() =>{
 
 let TrueReputation = () => {
     for(let i=0 ; i<6; i++){
-        setUP(false);
+        // setUP(false);
         calculateRateObjectivity(false);
         registerRateObjectivity();
         calculateUserObjectivity();
@@ -22,12 +22,10 @@ let TrueReputation = () => {
         registerTR();
         calculateNewReputation();
     }
-
-    
-    let userToAttack = dangerUser();
-    console.log(userToAttack);
-    let val = giveRates(userToAttack[3] , true);
-    console.log(getMean(val));
+    // after the loop setUp again to inject the last loop data
+    // setUP(false); 
+    test = dangerUser();
+    console.log(test);
 }
 console.log(dataset);
 
