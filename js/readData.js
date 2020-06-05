@@ -40,16 +40,24 @@
             DataSet[0].push(
                 {
                     user_id : Number(md[196]),
-                    rating : [{item : Number(md[242]) , rate : Number(md[3])}]
+                    rating : [
+                        {
+                            item : Number(md[242]) , 
+                            rate : Number(md[3]),
+                            genere:Number(md[16])
+                        }
+                    ]
                 }
             );
         }else{
             
             findedUser.rating.push({
                 item : Number(md[242]),
-                rate : Number(md[3])
+                rate : Number(md[3]),
+                genere:Number(md[16])
             });
         }
+
         //fill out DataSet[1]
         findedItem = DataSet[1].find(product =>{
             return product.item_id === Number(md[242]);
@@ -57,7 +65,13 @@
         if(findedItem === undefined){
             DataSet[1].push({
                 item_id : Number(md[242]),
-                rated : [{user_id : Number(md[196]) , rate : Number(md[3])}]
+                genere : Number(md[16]),
+                rated : [
+                    {
+                        user_id : Number(md[196]), 
+                        rate : Number(md[3])
+                    }
+                ]
             });
         }else{
             findedItem.rated.push({

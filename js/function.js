@@ -5,6 +5,9 @@ let init = () => {
     registerRateObjectivity();
     calculateUserObjectivity();
     calculateUserConsistency();
+    specifityDataPreparing();
+    // calculateSpecifity();
+    calculateSpecifityOld();
     calculateTR();
     registerTR();
     calculateNewReputation();
@@ -41,7 +44,7 @@ const giveUsersRates = u => {
 
 //calculate reputation and standard deviation
 const setUP = (state) =>{
-    dataset[1].forEach((item) =>{
+    dataset[1].forEach((item , index) =>{
         let ratesArray = giveRates(item, state);
         //calc rep
         let rep = getMean(ratesArray);
@@ -55,7 +58,7 @@ const setUP = (state) =>{
 
 //calculateRateObjectivity : call it and then --> the dataset[1].rated has a new property
 let calculateRateObjectivity = (initlz) => {
-    dataset[1].forEach(item => {
+    dataset[1].forEach((item , index) => {
         item.rated.forEach(subItem =>{
             let or;
             if(initlz){
@@ -65,7 +68,6 @@ let calculateRateObjectivity = (initlz) => {
                 
                 or = Math.abs((subItem.rate - item.rep) / (item.sd + 1));
             }
-            
             subItem['or'] = or;
         });
     });
@@ -96,6 +98,9 @@ const registerRateObjectivity =  () => {
 //calculateUserObjectivity
 const calculateUserObjectivity = () =>{
     dataset[0].forEach(item =>{
+        // if(item.user_id === 186) {
+        //     debugger;
+        // }
         item['oStar'] = (arraySum(item.orArray) / item.orArray.length);
     });
 }
@@ -113,20 +118,20 @@ const calculateUserConsistency = ()=>{
                 cr = 0;
             }
             //confidence of .5
-            if(((orItem.userOR <= (bpr.q3 + (1.5*bpr.IQR))) && (orItem.userOR > (bpr.q3 + (1 * bpr.IQR)))) ||
+            else if(((orItem.userOR <= (bpr.q3 + (1.5*bpr.IQR))) && (orItem.userOR > (bpr.q3 + (1 * bpr.IQR)))) ||
                ((orItem.userOR >= (bpr.q1 - (1.5*bpr.IQR))) && (orItem.userOR < (bpr.q1 - (1 * bpr.IQR)))))
             {
                 cr = 0.5;
             }
             //confidence of .7
-            if(((orItem.userOR <= (bpr.q3 + (1 * bpr.IQR))) && (orItem.userOR > (bpr.q3 + (0.5 * bpr.IQR)))) ||
+            else if(((orItem.userOR <= (bpr.q3 + (1 * bpr.IQR))) && (orItem.userOR > (bpr.q3 + (0.5 * bpr.IQR)))) ||
                ((orItem.userOR >= (bpr.q1 - (1 * bpr.IQR))) && (orItem.userOR < (bpr.q1 - (0.5 * bpr.IQR)))))
             {
                 cr = 0.7;
                 
             }
             //confidence of .9
-            if(((orItem.userOR <= (bpr.q3 + (0.5 * bpr.IQR))) && (orItem.userOR > bpr.q3)) ||
+            else if(((orItem.userOR <= (bpr.q3 + (0.5 * bpr.IQR))) && (orItem.userOR > bpr.q3)) ||
                ((orItem.userOR >= (bpr.q1 - (0.5 * bpr.IQR))) && (orItem.userOR < bpr.q1)))
             {
                 cr = 0.9;
@@ -145,6 +150,136 @@ const calculateUserConsistency = ()=>{
     })
 }
 
+//calculate Context specifity
+const specifityDataPreparing = () =>{
+    dataset[0].forEach((user)=>{
+        let ctxArray = [];
+        let frequencyResult;
+        let repeatNumber;
+        if(user.rating.length !== undefined){
+            user.rating.forEach((rate) =>{
+                ctxArray.push(rate.genere);
+            });
+        }else{
+            ctxArray.push(user.rating.genere);
+        }
+        frequencyResult = frequency(ctxArray);
+
+        user['ctxArray'] = ctxArray;
+        user['ctxFreq'] = frequencyResult;
+        // clone object
+        localStorage.setItem('temp' , JSON.stringify(frequencyResult.b));
+        user['ctxBoxPlotResult'] = setBoxPlot(frequencyResult.b);
+        //use cloned object
+        user['ctxFreq']['notSortedFrequecy'] = JSON.parse(localStorage.getItem('temp'));
+        //remove cloned object
+        localStorage.removeItem('temp');
+    });
+}
+// const calculateSpecifity = () =>{
+//     dataset[0].forEach(user =>{
+//         const iqr = user.ctxBoxPlotResult.IQR;
+//         const q3 = user.ctxBoxPlotResult.q3;
+//         const q1 = user.ctxBoxPlotResult.q1;
+//         const userGenereList = user.ctxFreq.a;
+//         if(user.rating.length !== undefined){
+//             user.rating.forEach((rte) =>{
+//                 const rateGenere = rte.genere;
+//                 const findGenereIndex = userGenereList.findIndex(num =>  num === rateGenere);
+//                 const currentFreq = user.ctxFreq.notSortedFrequecy[findGenereIndex];
+//                 //outliers
+//                 if((currentFreq > (q3 + (1.5* iqr))) || (currentFreq < (q1 - (1.5 * iqr)))){
+//                     rte['specifity'] = 0;
+//                 }
+
+//                 //confidence of .5
+//                 else if(((currentFreq <= (q3 + (1.5* iqr))) && (currentFreq > (q3 + (1 * iqr)))) ||
+//                 ((currentFreq >= (q1 - (1.5* iqr))) && (currentFreq < (q1 - (1 * iqr)))))
+//                 {
+//                     rte['specifity'] = 0.5;
+//                 }
+
+//                 //confidence of .7
+//                 else if(((currentFreq <= (q3 + (1 * iqr))) && (currentFreq > (q3 + (0.5 * iqr)))) ||
+//                 ((currentFreq >= (q1 - (1 * iqr))) && (currentFreq < (q1 - (0.5 * iqr)))))
+//                 {
+//                     rte['specifity'] = 0.7;
+//                 }
+
+//                 //confidence of .9
+//                 else if(((currentFreq <= (q3 + (0.5 * iqr))) && (currentFreq > q3)) ||
+//                 ((currentFreq >= (q1 - (0.5 * iqr))) && (currentFreq < q1)))
+//                 {
+//                     rte['specifity'] = 0.9;
+//                 }
+//                 else{
+//                     rte['specifity'] = 1;
+//                 }
+//                 })
+//         }else{
+//             const rateGenere = user.rating.genere;
+//             const currentFreq = user.ctxFreq.notSortedFrequecy[0] 
+//              //outliers
+//              if((currentFreq > (q3 + (1.5* iqr))) || (currentFreq < (q1 - (1.5 * iqr)))){
+//                 user.rating['specifity'] = 0;
+//             }
+
+//             //confidence of .5
+//             else if(((currentFreq <= (q3 + (1.5* iqr))) && (currentFreq > (q3 + (1 * iqr)))) ||
+//             ((currentFreq >= (q1 - (1.5* iqr))) && (currentFreq < (q1 - (1 * iqr)))))
+//             {
+//                 user.rating['specifity'] = 0.3;
+//             }
+
+//             //confidence of .7
+//             else if(((currentFreq <= (q3 + (1 * iqr))) && (currentFreq > (q3 + (0.5 * iqr)))) ||
+//             ((currentFreq >= (q1 - (1 * iqr))) && (currentFreq < (q1 - (0.5 * iqr)))))
+//             {
+//                 user.rating['specifity'] = 0.7;
+//             }
+
+//             //confidence of .9
+//             else if(((currentFreq <= (q3 + (0.5 * iqr))) && (currentFreq > q3)) ||
+//             ((currentFreq >= (q1 - (0.5 * iqr))) && (currentFreq < q1)))
+//             {
+//                 user.rating['specifity'] = 0.9;
+//             }
+//             else{
+//                 user.rating['specifity'] = 1;
+//             }
+//         }
+//     });
+// }
+
+const getAverageIQR = function(){
+    let sum = 0;
+    dataset[0].forEach(function(user){
+        sum = sum + user.ctxBoxPlotResult.IQR
+    });
+
+    return (sum / dataset[0].length);
+}
+
+const calculateSpecifityOld = () =>{
+    let iqr = getAverageIQR();
+    console.log(iqr);
+    dataset[0].forEach(user =>{
+        const userGenereList = user.ctxFreq.a;
+        if(user.rating.length !== undefined){
+            user.rating.forEach((rte) =>{
+                const rateGenere = rte.genere;
+                const findGenereIndex = userGenereList.findIndex(num =>  num === rateGenere);
+                const specifity = user.ctxFreq.notSortedFrequecy[findGenereIndex] - iqr;
+                rte['specifity'] = specifity;
+            })
+        }else{
+            const rateGenere = user.rating.genere;
+            const specifity = user.ctxFreq.notSortedFrequecy[0] - iqr;
+            user.rating['specifity'] = specifity;
+        }
+    });
+}
+
 //calculate Trust = O(n^2)
 const calculateTR = () =>{
     dataset[0].forEach((user)=>{
@@ -152,16 +287,21 @@ const calculateTR = () =>{
         const actv = user.rating.length;
         const obj = user.oStar;
         let tr;
+        // let ctx;
         if(user.rating.length !== undefined){
             user.rating.forEach((rte , indx)=>{
                 //be careful about user.crArray[indx] in order (decided not to go through base on id)
-                tr = obj * actv * user.crArray[indx].cr;
+                ctx = (rte.specifity > 0) ? rte.specifity : 0
+                // tr = (obj) * (actv ) * (user.crArray[indx].cr) * ctx;
+                tr = (obj) * (actv ) * (user.crArray[indx].cr) * ctx;
                 rte['tr'] = tr;
                 trArray.push({item : rte.item,tr : tr , user:user.user_id });
             });
         }
         else{
-            tr = obj * 1 * user.crArray[0].cr;
+            ctx = (user.rating.specifity > 0) ? user.rating.specifity : 0;
+            // tr = obj * 1 * user.crArray[0].cr * ctx ;
+            tr = obj * 1 * user.crArray[0].cr * ctx;
             user.rating['tr'] = tr;
             trArray.push({item : user.rating.item , tr : tr , user:user.user_id});
         }
@@ -194,7 +334,7 @@ const registerTR = () =>{
 
 //calculateNewReputation
 const calculateNewReputation = () =>{
-    dataset[1].forEach(product => {
+    dataset[1].forEach((product , index)=> {
         let sumOfTR = 0;
         // sum of all r * tr
         let sumOfRTR = 0;
@@ -202,10 +342,13 @@ const calculateNewReputation = () =>{
             sumOfTR += prObj.tr;
             sumOfRTR += prObj.tr * prObj.rate;
         });
+        
         // product.rated.forEach(prObj =>{
         //     prObj.calcRep = (prObj.rate * prObj.tr) / sumOfTR ;
         // });
-        product.rep = sumOfRTR / sumOfTR;
+        if(!(sumOfRTR === 0 && sumOfTR === 0)){
+            product.rep = sumOfRTR / sumOfTR;
+        }
     })
 }
 

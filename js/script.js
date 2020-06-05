@@ -3,8 +3,15 @@ let test;
 
 
 setTimeout(() =>{
-    pushAttack(dataset[1] , 265);
-    // pushAttack(dataset[1] , 173);
+    // arr , productId , genere , rateValue , dataInjectNum
+    // PushAttackWithFrequency(dataset[1] , 346 ,3 , 5 , 5);
+    nuckAttackWithFrequency(dataset[1] , 358 ,12 , 1 , 35);
+    // attack(dataset[1] , 358 ,12 , 1 , 25);
+    // attack(dataset[1] , 86 ,1 , 5 , 101);
+    // attack(dataset[1] , 118 ,3 , 5 , 202);
+    // attack(dataset[1] , 332 ,14 , 5 , 100);
+    // attack(dataset[1] , 498 ,7 , 5 , 100);
+    // attack(dataset[1] , 231 , 16 , 1 , 104);
     init();
     TrueReputation();
     
@@ -18,6 +25,8 @@ let TrueReputation = () => {
         registerRateObjectivity();
         calculateUserObjectivity();
         calculateUserConsistency();
+        // specifityDataPreparing();
+        // calculateSpecifity();
         calculateTR();
         registerTR();
         calculateNewReputation();
