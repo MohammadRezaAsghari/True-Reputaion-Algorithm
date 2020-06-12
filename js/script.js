@@ -5,8 +5,9 @@ let test;
 setTimeout(() =>{
     // arr , productId , genere , rateValue , dataInjectNum
     // PushAttackWithFrequency(dataset[1] , 346 ,3 , 5 , 5);
-    nuckAttackWithFrequency(dataset[1] , 358 ,12 , 1 , 35);
+    // nuckAttackWithFrequency(dataset[1] , 358 ,12 , 1 , 30);
     // attack(dataset[1] , 358 ,12 , 1 , 25);
+    // attack(dataset[1] , 346 ,3 , 5 , 30);
     // attack(dataset[1] , 86 ,1 , 5 , 101);
     // attack(dataset[1] , 118 ,3 , 5 , 202);
     // attack(dataset[1] , 332 ,14 , 5 , 100);
